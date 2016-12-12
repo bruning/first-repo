@@ -3,11 +3,15 @@ def low_guess?(guess, num)
 end
 
 def high_guess?(guess, num)
-guess > num
+  guess > num
 end
 
 def correct_guess?(guess, num)
   guess == num
+end
+
+def out_of_guesses?(g)
+  g.count >= 5
 end
 
 num = (1..100).to_a.sample
@@ -18,19 +22,9 @@ puts "Hello, I've thought of a number between 1 and 100."
 puts "Think you can guess it in five tries or fewer?"
 puts "btw - the number is #{num}"
 
-#until guesses.count >= 5 do
 while guesses.count < 5 do
   puts "Please make a guess:"
   print "> "
-
-#case guesses.count
-#when 0 then print "> "
-#when 1 then print "> "
-#when 2 then print "> "
-#when 3 then print "> "
-#when 4 then print "> "
-#when 5 then print "Sorry, no more guesses"
-#end
 
   guess = gets.chomp
 
@@ -39,7 +33,7 @@ while guesses.count < 5 do
     guess = guess.to_i
 
     if guesses.include?(guess)
-      puts "#{guess} again?! Please don't waste too much of my time, #{name}  : )"
+      puts "#{guess} again?! Please don't waste too much of my time, #{name}"
     end
 
     guesses << guess
@@ -50,22 +44,22 @@ while guesses.count < 5 do
     end
 
     is_low = low_guess?(guess, num)
-    is_high = high_guess?(guess,num)
+    is_high = high_guess?(guess, num)
 
     if is_low && guesses.any?{|g| low_guess?(g, num) && g > guess}
-      puts "You should already know that it's higher than that, #{name}  : )"
+      puts "You should already know that it's higher than that, #{name}  :-)"
     elsif is_high && guesses.any?{|g| high_guess?(g, num) && g < guess}
-      puts "Come on #{name}, you should know it's lower than that  : )"
+      puts "Come on #{name}, you should know it's lower than that  :-)"
     end
 
 #https://ruby-doc.org/core-2.2.3/Enumerable.html#method-i-any-3F
 
-
-    puts "My number's #{is_low ? 'higher' : 'lower'} than #{guess}.  Try again:"
+    message = "My number's #{is_low ? 'higher' : 'lower'} than #{guess}."
+    if not out_of_guesses?(guesses)
+      message += " Try again:"
+    end
+    puts message
     print "> "
-
-#is_high = high_guess?(guess, num)
-
 
   else
     break if guess == ""
@@ -74,4 +68,8 @@ while guesses.count < 5 do
     # Any non-numbers get flagged and user tries again
 
   end
+end
+
+if out_of_guesses?(guesses)
+  puts "Better luck next time! The number was #{num}"
 end
